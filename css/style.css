@@ -165,3 +165,6 @@ p{margin:0 0 1.1em}
 /* language toggle */
 .site-nav .nav-lang{border:1px solid rgba(255,255,255,.45);color:#fff;padding:6px 12px;border-radius:999px;font-size:.72rem;letter-spacing:.08em;margin-left:.4rem}
 .site-nav .nav-lang:hover{border-color:#fff}
+.foot-insta{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.6rem}
+.foot-insta>span{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;opacity:.6}
+.foot-insta a b{font-weight:600;margin-right:.3rem}

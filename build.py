@@ -226,7 +226,7 @@ def page(fname, title, desc, body, og="images/cafe-13.jpg", extra_ld="", kw="", 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+KR:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=2">
+<link rel="stylesheet" href="css/style.css?v=3">
 {jsonld_cafe()}
 {extra_ld}
 </head>
@@ -251,7 +251,11 @@ def page(fname, title, desc, body, og="images/cafe-13.jpg", extra_ld="", kw="", 
     <div>
       <p>{T(ADDRESS, ADDRESS_EN)}</p>
       <p>Tel <a href="tel:{TEL_RAW}">{TEL}</a> · <a href="mailto:{EMAIL}">{EMAIL}</a></p>
-      <p><a href="{INSTA}" target="_blank" rel="noopener">Instagram {INSTA_HANDLE}</a> · <a href="{MAIN_SITE}" target="_blank" rel="noopener">{T("마리나파크 연회·웨딩", "Marina Park Banquet &amp; Wedding")} marinapark.co.kr</a></p>
+      <p class="foot-insta"><span>Instagram</span>
+        <a href="{INSTA}" target="_blank" rel="noopener"><b>{T("카페","Cafe")}</b> {INSTA_HANDLE}</a>
+        <a href="https://www.instagram.com/marinaparkwedding" target="_blank" rel="noopener"><b>{T("웨딩","Wedding")}</b> @marinaparkwedding</a>
+        <a href="https://www.instagram.com/marinaparkevent" target="_blank" rel="noopener"><b>{T("연회 · 이벤트","Banquet · Event")}</b> @marinaparkevent</a></p>
+      <p><a href="{MAIN_SITE}" target="_blank" rel="noopener">{T("마리나파크 연회·웨딩", "Marina Park Banquet &amp; Wedding")} marinapark.co.kr</a></p>
     </div>
   </div>
   <p class="wrap copy">© {datetime.date.today().year} Marina Park. All rights reserved.</p>
