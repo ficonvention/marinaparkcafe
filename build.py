@@ -251,7 +251,8 @@ def page(fname, title, desc, body, og="images/cafe-13.jpg", extra_ld="", kw="", 
     </div>
     <div>
       <p>{T(ADDRESS, ADDRESS_EN)}</p>
-      <p>{T("카페","Cafe")} <a href="tel:{TEL_RAW}">{TEL}</a> · {T("연회·행사 (플로팅아일랜드/마리나파크)","Banquet &amp; events (Floating Island / Marina Park)")} <a href="tel:{BANQUET_TEL_RAW}">{BANQUET_TEL}</a></p>
+      <p>{T("카페 예약","Cafe reservations")} <a href="tel:{TEL_RAW}">{TEL}</a></p>
+      <p>{T("연회 예약 (플로팅아일랜드/마리나파크)","Banquet reservations (Floating Island / Marina Park)")} <a href="tel:{BANQUET_TEL_RAW}">{BANQUET_TEL}</a></p>
       <p><a href="mailto:{EMAIL}">{EMAIL}</a></p>
       <p class="foot-insta"><span>Instagram</span>
         <a href="{INSTA}" target="_blank" rel="noopener"><b>{T("카페","Cafe")}</b> {INSTA_HANDLE}</a>
@@ -320,8 +321,8 @@ def build(lang):
           <li><b>{T("영업시간","Hours")}</b>{T(HOURS, HOURS_EN)}</li>
           <li><b>{T("브런치","Brunch")}</b>{T(f"오후 {BRUNCH_UNTIL}까지", f"until {BRUNCH_UNTIL}")}</li>
           <li><b>{T("위치","Location")}</b>{T(ADDRESS_SHORT, ADDRESS_SHORT_EN)} · {T("마리나파크 1층","Marina Park 1F")}</li>
-          <li><b>{T("카페 문의","Cafe")}</b><a href="tel:{TEL_RAW}">{TEL}</a></li>
-          <li><b>{T("연회·행사","Banquet")}</b><a href="tel:{BANQUET_TEL_RAW}">{BANQUET_TEL}</a> <small>{T("플로팅아일랜드/마리나파크","Floating Island / Marina Park")}</small></li>
+          <li><b>{T("카페 예약","Cafe reservations")}</b><a href="tel:{TEL_RAW}">{TEL}</a></li>
+          <li><b>{T("연회 예약","Banquet reservations")}</b><a href="tel:{BANQUET_TEL_RAW}">{BANQUET_TEL}</a> <small>{T("플로팅아일랜드/마리나파크","Floating Island / Marina Park")}</small></li>
         </ul>
         <p class="en-summary" lang="en" {"hidden" if lang == "en" else ""}>Marina Park Cafe is a riverside cafe &amp; restaurant on the ground floor of Marina Park at Seoraenaru, Banpo Han River Park, Seoul. Floor-to-ceiling river views, a red-awning terrace, coffee and desserts, Italian plates, brunch until {BRUNCH_UNTIL}, wine, beer and highballs. Open daily 10:00–22:00.</p>
       </div>
@@ -367,7 +368,7 @@ def build(lang):
         <h2>Small gatherings <em>by the river</em></h2>
         <p>{T("카페 가든과 테라스에서 10~30명 규모의 생일 모임, 동호회, 브라이덜 샤워, 소규모 송년 모임을 예약하실 수 있습니다. 케이크 반입과 간단한 데코가 가능하고, 한강 노을이 자연스러운 배경이 됩니다.", "The cafe garden and terrace can be booked for groups of 10–30: birthdays, club gatherings, bridal showers and small year-end parties. Bring a cake and simple decorations — the river sunset does the rest.")}</p>
         <p>{T("50명 이상의 연회, 기업행사, 예식은 같은 건물 2층 컨벤션홀(100~300명)과 3층 루프탑 가든에서 진행합니다 — ", "Banquets of 50 or more, corporate events and weddings are held in the 2F convention hall (100–300 guests) and the 3F rooftop garden of the same building — ")}<a href="{MAIN_SITE}" target="_blank" rel="noopener">{T("마리나파크 연회·웨딩 안내", "Marina Park banquet &amp; wedding")}</a>.</p>
-        <p class="hero-cta"><a class="btn btn-dark" href="{RSV}">{T("예약하기 (이메일)", "Reserve by email")}</a><a class="btn btn-ghost-dark" href="tel:{TEL_RAW}">{T("전화", "Call")} {TEL}</a></p>
+        <p class="hero-cta"><a class="btn btn-dark" href="{RSV}">{T("예약하기 (이메일)", "Reserve by email")}</a><a class="btn btn-ghost-dark" href="tel:{TEL_RAW}">{T("카페 예약", "Cafe reservations")} {TEL}</a><a class="btn btn-ghost-dark" href="tel:{BANQUET_TEL_RAW}">{T("연회 예약", "Banquet reservations")} {BANQUET_TEL}</a></p>
       </div>
     </div>
   </section>
@@ -395,7 +396,8 @@ def build(lang):
         <ul class="facts">
           <li><b>{T("주소","Address")}</b>{T(ADDRESS, ADDRESS_EN)}</li>
           <li><b>{T("영업시간","Hours")}</b>{T(HOURS, HOURS_EN)}</li>
-          <li><b>{T("전화","Phone")}</b>{T("카페","Cafe")} <a href="tel:{TEL_RAW}">{TEL}</a> · {T("연회·행사","Banquet")} <a href="tel:{BANQUET_TEL_RAW}">{BANQUET_TEL}</a> <small>{T("(플로팅아일랜드/마리나파크)","(Floating Island / Marina Park)")}</small></li>
+          <li><b>{T("카페 예약","Cafe reservations")}</b><a href="tel:{TEL_RAW}">{TEL}</a></li>
+          <li><b>{T("연회 예약","Banquet reservations")}</b><a href="tel:{BANQUET_TEL_RAW}">{BANQUET_TEL}</a> <small>{T("플로팅아일랜드/마리나파크","Floating Island / Marina Park")}</small></li>
           <li><b>{T("주차","Parking")}</b>{T("반포한강공원 주차장 이용", "Banpo Han River Park parking lot")}</li>
           <li><b>{T("대중교통","Transit")}</b>{T("고속터미널역 · 신반포역에서 반포한강공원 서래나루 방향", "From Express Bus Terminal or Sinbanpo station, walk toward Seoraenaru in Banpo Han River Park")}</li>
           <li><b>Instagram</b><a href="{INSTA}" target="_blank" rel="noopener">{INSTA_HANDLE}</a></li>
@@ -437,7 +439,7 @@ def build(lang):
       <div class="menu-grid">
   {menu_cards}
       </div>
-      <p class="center note">{T("메뉴와 가격은 사정에 따라 변경될 수 있습니다. 단체 예약·카페 파티 문의", "Menu and prices are subject to change. Group reservations &amp; cafe parties:")} <a href="tel:{TEL_RAW}">{TEL}</a> · <a href="{RSV}">{EMAIL}</a></p>
+      <p class="center note">{T("메뉴와 가격은 사정에 따라 변경될 수 있습니다.", "Menu and prices are subject to change.")} {T("카페 예약","Cafe reservations")} <a href="tel:{TEL_RAW}">{TEL}</a> · {T("연회 예약","Banquet reservations")} <a href="tel:{BANQUET_TEL_RAW}">{BANQUET_TEL}</a> · <a href="{RSV}">{EMAIL}</a></p>
     </div>
   </section>
   """
@@ -478,7 +480,7 @@ with open(os.path.join(ROOT, "llms.txt"), "w", encoding="utf-8") as f:
 > 반포한강공원 서래나루 마리나파크 1층의 한강뷰 카페 & 레스토랑. {HOURS}, 브런치 세트 {BRUNCH_UNTIL}까지. 커피·티·디저트·브런치·피자·파스타·돈까스·스테이크·와인·맥주·하이볼. 레드 어닝 야외 테라스, 10~30명 소규모 파티 예약 가능.
 
 - 주소: {ADDRESS}
-- 카페 전화: {TEL} · 연회·행사 전화(플로팅아일랜드/마리나파크): {BANQUET_TEL} · 이메일: {EMAIL} · Instagram: {INSTA}
+- 카페 예약 전화: {TEL} · 연회 예약 전화(플로팅아일랜드/마리나파크): {BANQUET_TEL} · 이메일: {EMAIL} · Instagram: {INSTA}
 - 주차: 반포한강공원 주차장
 - 메뉴: {SITE_URL}/menu.html
 - 연회·웨딩(2층 컨벤션홀 100~300명, 3층 루프탑 가든): {MAIN_SITE}
