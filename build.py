@@ -11,7 +11,8 @@ NAME_EN = "Marina Park Cafe"
 HOURS = "매일 10:00 – 22:00"
 HOURS_EN = "Daily 10:00 – 22:00"
 BRUNCH_UNTIL = "16:00"
-TEL = "02-537-2440"; TEL_RAW = "+82-2-537-2440"
+TEL = "02-596-2440"; TEL_RAW = "+82-2-596-2440"
+BANQUET_TEL = "02-537-2440"; BANQUET_TEL_RAW = "+82-2-537-2440"
 EMAIL = "ficonvention@gmail.com"
 ADDRESS = "서울특별시 서초구 반포동 115-1 (서래나루 · 반포한강공원) 마리나파크 1층"
 ADDRESS_SHORT = "서울 서초구 반포동 115-1 서래나루"
@@ -250,7 +251,8 @@ def page(fname, title, desc, body, og="images/cafe-13.jpg", extra_ld="", kw="", 
     </div>
     <div>
       <p>{T(ADDRESS, ADDRESS_EN)}</p>
-      <p>Tel <a href="tel:{TEL_RAW}">{TEL}</a> · <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+      <p>{T("카페","Cafe")} <a href="tel:{TEL_RAW}">{TEL}</a> · {T("연회·행사 (플로팅아일랜드/마리나파크)","Banquet &amp; events (Floating Island / Marina Park)")} <a href="tel:{BANQUET_TEL_RAW}">{BANQUET_TEL}</a></p>
+      <p><a href="mailto:{EMAIL}">{EMAIL}</a></p>
       <p class="foot-insta"><span>Instagram</span>
         <a href="{INSTA}" target="_blank" rel="noopener"><b>{T("카페","Cafe")}</b> {INSTA_HANDLE}</a>
         <a href="https://www.instagram.com/marinaparkwedding" target="_blank" rel="noopener"><b>{T("웨딩","Wedding")}</b> @marinaparkwedding</a>
@@ -318,7 +320,8 @@ def build(lang):
           <li><b>{T("영업시간","Hours")}</b>{T(HOURS, HOURS_EN)}</li>
           <li><b>{T("브런치","Brunch")}</b>{T(f"오후 {BRUNCH_UNTIL}까지", f"until {BRUNCH_UNTIL}")}</li>
           <li><b>{T("위치","Location")}</b>{T(ADDRESS_SHORT, ADDRESS_SHORT_EN)} · {T("마리나파크 1층","Marina Park 1F")}</li>
-          <li><b>{T("문의","Contact")}</b><a href="tel:{TEL_RAW}">{TEL}</a></li>
+          <li><b>{T("카페 문의","Cafe")}</b><a href="tel:{TEL_RAW}">{TEL}</a></li>
+          <li><b>{T("연회·행사","Banquet")}</b><a href="tel:{BANQUET_TEL_RAW}">{BANQUET_TEL}</a> <small>{T("플로팅아일랜드/마리나파크","Floating Island / Marina Park")}</small></li>
         </ul>
         <p class="en-summary" lang="en" {"hidden" if lang == "en" else ""}>Marina Park Cafe is a riverside cafe &amp; restaurant on the ground floor of Marina Park at Seoraenaru, Banpo Han River Park, Seoul. Floor-to-ceiling river views, a red-awning terrace, coffee and desserts, Italian plates, brunch until {BRUNCH_UNTIL}, wine, beer and highballs. Open daily 10:00–22:00.</p>
       </div>
@@ -392,7 +395,7 @@ def build(lang):
         <ul class="facts">
           <li><b>{T("주소","Address")}</b>{T(ADDRESS, ADDRESS_EN)}</li>
           <li><b>{T("영업시간","Hours")}</b>{T(HOURS, HOURS_EN)}</li>
-          <li><b>{T("전화","Phone")}</b><a href="tel:{TEL_RAW}">{TEL}</a></li>
+          <li><b>{T("전화","Phone")}</b>{T("카페","Cafe")} <a href="tel:{TEL_RAW}">{TEL}</a> · {T("연회·행사","Banquet")} <a href="tel:{BANQUET_TEL_RAW}">{BANQUET_TEL}</a> <small>{T("(플로팅아일랜드/마리나파크)","(Floating Island / Marina Park)")}</small></li>
           <li><b>{T("주차","Parking")}</b>{T("반포한강공원 주차장 이용", "Banpo Han River Park parking lot")}</li>
           <li><b>{T("대중교통","Transit")}</b>{T("고속터미널역 · 신반포역에서 반포한강공원 서래나루 방향", "From Express Bus Terminal or Sinbanpo station, walk toward Seoraenaru in Banpo Han River Park")}</li>
           <li><b>Instagram</b><a href="{INSTA}" target="_blank" rel="noopener">{INSTA_HANDLE}</a></li>
@@ -475,7 +478,7 @@ with open(os.path.join(ROOT, "llms.txt"), "w", encoding="utf-8") as f:
 > 반포한강공원 서래나루 마리나파크 1층의 한강뷰 카페 & 레스토랑. {HOURS}, 브런치 세트 {BRUNCH_UNTIL}까지. 커피·티·디저트·브런치·피자·파스타·돈까스·스테이크·와인·맥주·하이볼. 레드 어닝 야외 테라스, 10~30명 소규모 파티 예약 가능.
 
 - 주소: {ADDRESS}
-- 전화: {TEL} · 이메일: {EMAIL} · Instagram: {INSTA}
+- 카페 전화: {TEL} · 연회·행사 전화(플로팅아일랜드/마리나파크): {BANQUET_TEL} · 이메일: {EMAIL} · Instagram: {INSTA}
 - 주차: 반포한강공원 주차장
 - 메뉴: {SITE_URL}/menu.html
 - 연회·웨딩(2층 컨벤션홀 100~300명, 3층 루프탑 가든): {MAIN_SITE}
