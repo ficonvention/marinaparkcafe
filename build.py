@@ -18,6 +18,7 @@ ADDRESS_SHORT = "서울 서초구 반포동 115-1 서래나루"
 INSTA = "https://www.instagram.com/marinapark_banpo"
 INSTA_HANDLE = "@marinapark_banpo"
 MAIN_SITE = "https://marinapark.co.kr"
+RESERVE = "mailto:ficonvention@gmail.com?subject=%5B%EB%A7%88%EB%A6%AC%EB%82%98%ED%8C%8C%ED%81%AC%20%EC%B9%B4%ED%8E%98%5D%20%EC%98%88%EC%95%BD%20%EB%AC%B8%EC%9D%98&body=%EC%95%88%EB%85%95%ED%95%98%EC%84%B8%EC%9A%94%2C%20%EC%98%88%EC%95%BD%20%EB%AC%B8%EC%9D%98%EB%93%9C%EB%A6%BD%EB%8B%88%EB%8B%A4.%0A%0A%E2%96%A0%20%EC%9D%B4%EB%A6%84%20/%20%EC%97%B0%EB%9D%BD%EC%B2%98%3A%20%0A%E2%96%A0%20%ED%9D%AC%EB%A7%9D%20%EB%82%A0%EC%A7%9C%C2%B7%EC%8B%9C%EA%B0%84%3A%20%0A%E2%96%A0%20%EC%9D%B8%EC%9B%90%3A%20%0A%E2%96%A0%20%EB%AA%A8%EC%9E%84%20%EC%A2%85%EB%A5%98%28%EC%83%9D%EC%9D%BC%C2%B7%EB%8F%99%ED%98%B8%ED%9A%8C%C2%B7%EB%B8%8C%EB%9D%BC%EC%9D%B4%EB%8D%9C%EC%83%A4%EC%9B%8C%C2%B7%EC%86%8C%EB%AA%A8%EC%9E%84%20%EB%93%B1%29%3A%20%0A%E2%96%A0%20%EC%9A%94%EC%B2%AD%EC%82%AC%ED%95%AD%28%EC%BC%80%EC%9D%B4%ED%81%AC%20%EB%B0%98%EC%9E%85%2C%20%EB%8D%B0%EC%BD%94%20%EB%93%B1%29%3A%20%0A%0A%EA%B0%90%EC%82%AC%ED%95%A9%EB%8B%88%EB%8B%A4."
 MAP_GOOGLE = "https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8+%EC%84%9C%EC%B4%88%EA%B5%AC+%EB%B0%98%ED%8F%AC%EB%8F%99+115-1"
 MAP_NAVER = "https://map.naver.com/p/search/%EB%A7%88%EB%A6%AC%EB%82%98%ED%8C%8C%ED%81%AC%20%EC%B9%B4%ED%8E%98%20%EB%B0%98%ED%8F%AC"
 TODAY = datetime.date.today().isoformat()
@@ -269,7 +270,7 @@ index_body = f"""
     <h1>MARINA PARK<br><em>Cafe</em></h1>
     <p class="hero-ko">한강이 눈앞에 펼쳐지는 반포한강공원 서래나루의 카페 &amp; 레스토랑</p>
     <p class="hero-meta"><span class="pill">{HOURS}</span><span class="pill">Brunch until {BRUNCH_UNTIL}</span><span class="pill">River Terrace</span></p>
-    <p class="hero-cta"><a class="btn" href="menu.html">Menu</a><a class="btn btn-ghost" href="#visit">오시는 길</a></p>
+    <p class="hero-cta"><a class="btn" href="menu.html">Menu</a><a class="btn btn-ghost" href="{RESERVE}">예약하기</a><a class="btn btn-ghost" href="#visit">오시는 길</a></p>
   </div>
 </section>
 
@@ -330,7 +331,7 @@ index_body = f"""
       <h2>Small gatherings <em>by the river</em></h2>
       <p>카페 가든과 테라스에서 10~30명 규모의 생일 모임, 동호회, 브라이덜 샤워, 소규모 송년 모임을 예약하실 수 있습니다. 케이크 반입과 간단한 데코가 가능하고, 한강 노을이 자연스러운 배경이 됩니다.</p>
       <p>50명 이상의 연회, 기업행사, 예식은 같은 건물 2층 컨벤션홀(100~300명)과 3층 루프탑 가든에서 진행합니다 — <a href="{MAIN_SITE}" target="_blank" rel="noopener">마리나파크 연회·웨딩 안내</a>.</p>
-      <p class="hero-cta"><a class="btn btn-dark" href="tel:{TEL_RAW}">전화 예약 {TEL}</a><a class="btn btn-ghost-dark" href="mailto:{EMAIL}?subject=마리나파크 카페 파티 문의">이메일 문의</a></p>
+      <p class="hero-cta"><a class="btn btn-dark" href="{RESERVE}">예약하기 (이메일)</a><a class="btn btn-ghost-dark" href="tel:{TEL_RAW}">전화 {TEL}</a></p>
     </div>
   </div>
 </section>
@@ -400,7 +401,7 @@ menu_body = f"""
     <div class="menu-grid">
 {menu_cards}
     </div>
-    <p class="center note">메뉴와 가격은 사정에 따라 변경될 수 있습니다. 단체 예약·카페 파티 문의 <a href="tel:{TEL_RAW}">{TEL}</a> · <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+    <p class="center note">메뉴와 가격은 사정에 따라 변경될 수 있습니다. 단체 예약·카페 파티 문의 <a href="tel:{TEL_RAW}">{TEL}</a> · <a href="{RESERVE}">{EMAIL}</a></p>
   </div>
 </section>
 """
