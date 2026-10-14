@@ -15,10 +15,13 @@ TEL = "02-537-2440"; TEL_RAW = "+82-2-537-2440"
 EMAIL = "ficonvention@gmail.com"
 ADDRESS = "서울특별시 서초구 반포동 115-1 (서래나루 · 반포한강공원) 마리나파크 1층"
 ADDRESS_SHORT = "서울 서초구 반포동 115-1 서래나루"
+ADDRESS_EN = "1F Marina Park, 115-1 Banpo-dong, Seocho-gu, Seoul (Seoraenaru, Banpo Han River Park)"
+ADDRESS_SHORT_EN = "Seoraenaru, Banpo-dong, Seocho-gu, Seoul"
 INSTA = "https://www.instagram.com/marinapark_banpo"
 INSTA_HANDLE = "@marinapark_banpo"
 MAIN_SITE = "https://marinapark.co.kr"
 RESERVE = "mailto:ficonvention@gmail.com?subject=%5B%EB%A7%88%EB%A6%AC%EB%82%98%ED%8C%8C%ED%81%AC%20%EC%B9%B4%ED%8E%98%5D%20%EC%98%88%EC%95%BD%20%EB%AC%B8%EC%9D%98&body=%EC%95%88%EB%85%95%ED%95%98%EC%84%B8%EC%9A%94%2C%20%EC%98%88%EC%95%BD%20%EB%AC%B8%EC%9D%98%EB%93%9C%EB%A6%BD%EB%8B%88%EB%8B%A4.%0A%0A%E2%96%A0%20%EC%9D%B4%EB%A6%84%20/%20%EC%97%B0%EB%9D%BD%EC%B2%98%3A%20%0A%E2%96%A0%20%ED%9D%AC%EB%A7%9D%20%EB%82%A0%EC%A7%9C%C2%B7%EC%8B%9C%EA%B0%84%3A%20%0A%E2%96%A0%20%EC%9D%B8%EC%9B%90%3A%20%0A%E2%96%A0%20%EB%AA%A8%EC%9E%84%20%EC%A2%85%EB%A5%98%28%EC%83%9D%EC%9D%BC%C2%B7%EB%8F%99%ED%98%B8%ED%9A%8C%C2%B7%EB%B8%8C%EB%9D%BC%EC%9D%B4%EB%8D%9C%EC%83%A4%EC%9B%8C%C2%B7%EC%86%8C%EB%AA%A8%EC%9E%84%20%EB%93%B1%29%3A%20%0A%E2%96%A0%20%EC%9A%94%EC%B2%AD%EC%82%AC%ED%95%AD%28%EC%BC%80%EC%9D%B4%ED%81%AC%20%EB%B0%98%EC%9E%85%2C%20%EB%8D%B0%EC%BD%94%20%EB%93%B1%29%3A%20%0A%0A%EA%B0%90%EC%82%AC%ED%95%A9%EB%8B%88%EB%8B%A4."
+RESERVE_EN = "mailto:ficonvention@gmail.com?subject=%5BMarina%20Park%20Cafe%5D%20Reservation%20inquiry&body=Hello%2C%20I%27d%20like%20to%20make%20a%20reservation.%0A%0A-%20Name%20%2F%20Phone%3A%20%0A-%20Date%20%26%20time%3A%20%0A-%20Number%20of%20guests%3A%20%0A-%20Occasion%20(birthday%2C%20bridal%20shower%2C%20small%20party...)%3A%20%0A-%20Requests%20(cake%2C%20decoration...)%3A%20%0A%0AThank%20you."
 MAP_GOOGLE = "https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8+%EC%84%9C%EC%B4%88%EA%B5%AC+%EB%B0%98%ED%8F%AC%EB%8F%99+115-1"
 MAP_NAVER = "https://map.naver.com/p/search/%EB%A7%88%EB%A6%AC%EB%82%98%ED%8C%8C%ED%81%AC%20%EC%B9%B4%ED%8E%98%20%EB%B0%98%ED%8F%AC"
 TODAY = datetime.date.today().isoformat()
@@ -136,8 +139,9 @@ DISHES = [
 # ----------------------------------------------------------------------
 def esc(s): return html.escape(s, quote=True)
 
-def menu_section(cat):
+def menu_section(cat, lang="ko"):
     title_ko, title_en, note, cls, rows = cat
+    if lang == "en": note = note.replace(f"PM {BRUNCH_UNTIL}까지 판매 · ", "")
     out = [f'<article class="menu-card" id="m-{title_en.lower().replace(" ", "-").replace("&", "and")}">']
     out.append(f'<header class="menu-head"><h3>{title_en}</h3><span class="menu-note">{note}</span></header>')
     out.append('<table>')
@@ -145,7 +149,8 @@ def menu_section(cat):
         if en is None:
             out.append(f'<tr class="menu-group"><th colspan="3">{ko}</th></tr>'); continue
         price = f'<td class="m-price">{p1}</td><td class="m-price">{p2}</td>' if cls == "hot-ice" else f'<td class="m-price" colspan="2">{p1}</td>'
-        out.append(f'<tr><td class="m-name">{ko}<span class="m-en">{esc(en)}</span></td>{price}</tr>')
+        name = f'{esc(en)}<span class="m-en">{ko}</span>' if lang == "en" else f'{ko}<span class="m-en">{esc(en)}</span>'
+        out.append(f'<tr><td class="m-name">{name}</td>{price}</tr>')
     out.append('</table></article>')
     return "\n".join(out)
 
@@ -180,13 +185,27 @@ def jsonld_faq(items):
          "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in items]}
     return '<script type="application/ld+json">' + json.dumps(d, ensure_ascii=False) + '</script>'
 
-def page(fname, title, desc, body, og="images/cafe-13.jpg", extra_ld="", kw=""):
+EN_OF = {"index.html": "en.html", "menu.html": "menu-en.html"}
+KO_OF = {v: k for k, v in EN_OF.items()}
+
+def page(fname, title, desc, body, og="images/cafe-13.jpg", extra_ld="", kw="", lang="ko"):
     url = f"{SITE_URL}/{'' if fname == 'index.html' else fname}"
-    nav = [("index.html#about", "About"), ("menu.html", "Menu"), ("index.html#dishes", "Dishes"),
-           ("index.html#party", "Private Party"), ("index.html#visit", "Visit")]
+    home = "en.html" if lang == "en" else "index.html"
+    menu = "menu-en.html" if lang == "en" else "menu.html"
+    nav = [(f"{home}#about", "About"), (menu, "Menu"), (f"{home}#dishes", "Dishes"),
+           (f"{home}#party", "Private Party"), (f"{home}#visit", "Visit")]
     nav_html = "".join(f'<a href="{h}">{t}</a>' for h, t in nav)
+    if lang == "en":
+        alt_href, alt_label, alt_hreflang = KO_OF[fname], "한국어", "ko"
+    else:
+        alt_href, alt_label, alt_hreflang = EN_OF[fname], "English", "en"
+    lang_btn = f'<a class="nav-lang" href="{alt_href}" hreflang="{alt_hreflang}" lang="{alt_hreflang}">{alt_label}</a>'
+    ko_url = f"{SITE_URL}/{'' if (fname if lang=='ko' else KO_OF[fname]) == 'index.html' else (fname if lang=='ko' else KO_OF[fname])}"
+    en_url = f"{SITE_URL}/{fname if lang=='en' else EN_OF[fname]}"
+    hreflang = f'<link rel="alternate" hreflang="ko" href="{ko_url}">\n<link rel="alternate" hreflang="en" href="{en_url}">\n<link rel="alternate" hreflang="x-default" href="{ko_url}">'
+    T = (lambda ko, en: en) if lang == "en" else (lambda ko, en: ko)
     return f"""<!DOCTYPE html>
-<html lang="ko">
+<html lang="{lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -194,28 +213,29 @@ def page(fname, title, desc, body, og="images/cafe-13.jpg", extra_ld="", kw=""):
 <meta name="description" content="{esc(desc)}">
 {f'<meta name="keywords" content="{esc(kw)}">' if kw else ''}
 <link rel="canonical" href="{url}">
+{hreflang}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{NAME_EN}">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{url}">
 <meta property="og:image" content="{SITE_URL}/{og}">
-<meta property="og:locale" content="ko_KR">
+<meta property="og:locale" content="{"en_US" if lang == "en" else "ko_KR"}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+KR:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=1">
+<link rel="stylesheet" href="css/style.css?v=2">
 {jsonld_cafe()}
 {extra_ld}
 </head>
 <body>
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="index.html"><span class="brand-mark">MARINA PARK</span><span class="brand-sub">Cafe &amp; Restaurant · Banpo Han River</span></a>
-    <button class="nav-toggle" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
-    <nav class="site-nav">{nav_html}<a class="nav-insta" href="{INSTA}" target="_blank" rel="noopener">Instagram</a></nav>
+    <a class="brand" href="{home}"><span class="brand-mark">MARINA PARK</span><span class="brand-sub">Cafe &amp; Restaurant · Banpo Han River</span></a>
+    <button class="nav-toggle" aria-label="{T("메뉴 열기", "Open menu")}" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="site-nav">{nav_html}<a class="nav-insta" href="{INSTA}" target="_blank" rel="noopener">Instagram</a>{lang_btn}</nav>
   </div>
 </header>
 <main>
@@ -225,18 +245,18 @@ def page(fname, title, desc, body, og="images/cafe-13.jpg", extra_ld="", kw=""):
   <div class="wrap foot-grid">
     <div>
       <p class="foot-brand">MARINA PARK CAFE</p>
-      <p class="foot-sub">반포 한강공원 서래나루 · 한강뷰 카페 &amp; 레스토랑</p>
-      <p class="foot-hours">{HOURS} · 브런치 {BRUNCH_UNTIL}까지</p>
+      <p class="foot-sub">{T("반포 한강공원 서래나루 · 한강뷰 카페 &amp; 레스토랑", "Seoraenaru, Banpo Han River Park · Riverside cafe &amp; restaurant")}</p>
+      <p class="foot-hours">{T(HOURS, HOURS_EN)} · {T(f"브런치 {BRUNCH_UNTIL}까지", f"Brunch until {BRUNCH_UNTIL}")}</p>
     </div>
     <div>
-      <p>{ADDRESS}</p>
+      <p>{T(ADDRESS, ADDRESS_EN)}</p>
       <p>Tel <a href="tel:{TEL_RAW}">{TEL}</a> · <a href="mailto:{EMAIL}">{EMAIL}</a></p>
-      <p><a href="{INSTA}" target="_blank" rel="noopener">Instagram {INSTA_HANDLE}</a> · <a href="{MAIN_SITE}" target="_blank" rel="noopener">마리나파크 연회·웨딩 marinapark.co.kr</a></p>
+      <p><a href="{INSTA}" target="_blank" rel="noopener">Instagram {INSTA_HANDLE}</a> · <a href="{MAIN_SITE}" target="_blank" rel="noopener">{T("마리나파크 연회·웨딩", "Marina Park Banquet &amp; Wedding")} marinapark.co.kr</a></p>
     </div>
   </div>
   <p class="wrap copy">© {datetime.date.today().year} Marina Park. All rights reserved.</p>
 </footer>
-<div id="lightbox" class="lightbox" aria-hidden="true"><button class="lb-close" aria-label="닫기">×</button><button class="lb-prev" aria-label="이전">‹</button><img alt=""><button class="lb-next" aria-label="다음">›</button></div>
+<div id="lightbox" class="lightbox" aria-hidden="true"><button class="lb-close" aria-label="{T("닫기","Close")}">×</button><button class="lb-prev" aria-label="{T("이전","Previous")}">‹</button><img alt=""><button class="lb-next" aria-label="{T("다음","Next")}">›</button></div>
 <script src="js/main.js"></script>
 </body>
 </html>"""
@@ -249,173 +269,193 @@ def fig(src, alt, cls="", lightbox=True):
 # ----------------------------------------------------------------------
 # INDEX
 # ----------------------------------------------------------------------
-faq_items = [
-  ("마리나파크 카페 영업시간은 어떻게 되나요?", f"{HOURS} 영업합니다. 브런치 세트는 오후 {BRUNCH_UNTIL}까지 주문 가능합니다. 행사 대관이 있는 날은 일부 공간 이용이 제한될 수 있습니다."),
-  ("카페는 어디에 있나요? 주차는요?", "서울 서초구 반포동 115-1 서래나루(반포한강공원) 마리나파크 1층입니다. 반포한강공원 주차장을 이용하시면 되고, 한강 산책 후 들르기 좋은 위치입니다."),
-  ("한강이 보이는 자리가 있나요?", "1층 전체가 한강을 바라보는 통창 구조이며, 레드 어닝이 있는 야외 테라스에서는 한강과 서울 도심 스카이라인을 바로 앞에서 즐기실 수 있습니다."),
-  ("생일 모임이나 소규모 파티도 가능한가요?", "카페 가든·테라스에서 10~30명 규모의 생일 모임, 동호회, 브라이덜 샤워, 소규모 송년 모임을 예약하실 수 있습니다. 케이크 반입과 간단한 데코가 가능하며, 더 큰 행사는 마리나파크 2층 컨벤션홀과 3층 루프탑 가든을 이용합니다."),
-  ("식사 메뉴도 있나요?", "피자, 파스타, 돈까스, 함박스테이크, 찹스테이크, 볶음밥 등 식사 메뉴와 브런치 세트, 와인·맥주·하이볼을 함께 준비하고 있습니다."),
-]
-faq_html = "".join(f'<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in faq_items)
+def build(lang):
+  T = (lambda ko, en: en) if lang == "en" else (lambda ko, en: ko)
+  RSV = RESERVE_EN if lang == "en" else RESERVE
+  faq_items = [
+    ("마리나파크 카페 영업시간은 어떻게 되나요?", f"{HOURS} 영업합니다. 브런치 세트는 오후 {BRUNCH_UNTIL}까지 주문 가능합니다. 행사 대관이 있는 날은 일부 공간 이용이 제한될 수 있습니다."),
+    ("카페는 어디에 있나요? 주차는요?", "서울 서초구 반포동 115-1 서래나루(반포한강공원) 마리나파크 1층입니다. 반포한강공원 주차장을 이용하시면 되고, 한강 산책 후 들르기 좋은 위치입니다."),
+    ("한강이 보이는 자리가 있나요?", "1층 전체가 한강을 바라보는 통창 구조이며, 레드 어닝이 있는 야외 테라스에서는 한강과 서울 도심 스카이라인을 바로 앞에서 즐기실 수 있습니다."),
+    ("생일 모임이나 소규모 파티도 가능한가요?", "카페 가든·테라스에서 10~30명 규모의 생일 모임, 동호회, 브라이덜 샤워, 소규모 송년 모임을 예약하실 수 있습니다. 케이크 반입과 간단한 데코가 가능하며, 더 큰 행사는 마리나파크 2층 컨벤션홀과 3층 루프탑 가든을 이용합니다."),
+    ("식사 메뉴도 있나요?", "피자, 파스타, 돈까스, 함박스테이크, 찹스테이크, 볶음밥 등 식사 메뉴와 브런치 세트, 와인·맥주·하이볼을 함께 준비하고 있습니다."),
+  ] if lang == "ko" else [
+    ("What are the opening hours?", f"We are open {HOURS_EN.lower()}. Brunch sets are served until {BRUNCH_UNTIL}. On days with private events, part of the space may be reserved."),
+    ("Where is the cafe? Is there parking?", "On the ground floor of Marina Park at Seoraenaru, Banpo Han River Park (115-1 Banpo-dong, Seocho-gu, Seoul). Use the Banpo Han River Park parking lot — a short walk along the river."),
+    ("Do you have seats with a river view?", "The whole ground floor faces the Han River through floor-to-ceiling windows, and the outdoor terrace under the red awning looks straight onto the river and the Seoul skyline."),
+    ("Can I book a birthday or a small party?", "Yes — the cafe garden and terrace host groups of 10–30 for birthdays, club meetings, bridal showers and small year-end parties. You may bring a cake and simple decorations. Larger events use the 2F convention hall and 3F rooftop garden of Marina Park."),
+    ("Do you serve meals?", "Yes: pizza, pasta, pork cutlet, hamburg steak, chop steak, fried rice and more, plus a brunch set, wine, beer and highballs."),
+  ]
+  faq_html = "".join(f'<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in faq_items)
 
-dish_cards = "".join(
-    f'<figure class="dish"><a href="images/{f}" data-lightbox><img src="images/{f}" alt="{esc(ko)} — {esc(en)}, 마리나파크 카페" loading="lazy"></a><figcaption><b>{ko}</b><span>{esc(en)}</span></figcaption></figure>'
-    for f, ko, en in DISHES)
+  dish_cards = "".join(
+      f'<figure class="dish"><a href="images/{f}" data-lightbox><img src="images/{f}" alt="{esc(ko)} — {esc(en)}, {T("마리나파크 카페", NAME_EN)}" loading="lazy"></a><figcaption><b>{T(ko, esc(en))}</b><span>{T(esc(en), ko)}</span></figcaption></figure>'
+      for f, ko, en in DISHES)
 
-index_body = f"""
-<section class="hero">
-  <img class="hero-bg" src="images/cafe-13.jpg" alt="마리나파크 카페 테라스에서 바라본 한강 노을" fetchpriority="high">
-  <div class="hero-box">
-    <p class="eyebrow">BANPO · HAN RIVER · SEORAENARU</p>
-    <h1>MARINA PARK<br><em>Cafe</em></h1>
-    <p class="hero-ko">한강이 눈앞에 펼쳐지는 반포한강공원 서래나루의 카페 &amp; 레스토랑</p>
-    <p class="hero-meta"><span class="pill">{HOURS}</span><span class="pill">Brunch until {BRUNCH_UNTIL}</span><span class="pill">River Terrace</span></p>
-    <p class="hero-cta"><a class="btn" href="menu.html">Menu</a><a class="btn btn-ghost" href="{RESERVE}">예약하기</a><a class="btn btn-ghost" href="#visit">오시는 길</a></p>
-  </div>
-</section>
-
-<section class="section" id="about">
-  <div class="wrap two-col">
-    <div class="col-text">
-      <p class="eyebrow">ABOUT</p>
-      <h2>River, light, <em>and a slow cup</em></h2>
-      <p>마리나파크 카페는 반포한강공원 서래나루, 한강 위에 떠 있는 듯한 마리나파크 1층에 있습니다. 통창 너머로 한강과 서울의 스카이라인이 이어지고, 레드 어닝 아래 야외 테라스에서는 노을과 야경을 가장 가까이에서 만날 수 있습니다.</p>
-      <p>커피와 티, 디저트부터 피자·파스타·스테이크 같은 식사 메뉴, 저녁의 와인과 맥주, 하이볼까지 — 한강 산책 후 가볍게 들르는 시간도, 특별한 날의 긴 식사도 어울리는 공간입니다.</p>
-      <ul class="facts">
-        <li><b>영업시간</b>{HOURS}</li>
-        <li><b>브런치</b>오후 {BRUNCH_UNTIL}까지</li>
-        <li><b>위치</b>{ADDRESS_SHORT} · 마리나파크 1층</li>
-        <li><b>문의</b><a href="tel:{TEL_RAW}">{TEL}</a></li>
-      </ul>
-      <p class="en-summary" lang="en">Marina Park Cafe is a riverside cafe &amp; restaurant on the ground floor of Marina Park at Seoraenaru, Banpo Han River Park, Seoul. Floor-to-ceiling river views, a red-awning terrace, coffee and desserts, Italian plates, brunch until {BRUNCH_UNTIL}, wine, beer and highballs. Open daily 10:00–22:00.</p>
+  index_body = f"""
+  <section class="hero">
+    <img class="hero-bg" src="images/cafe-13.jpg" alt="{T("마리나파크 카페 테라스에서 바라본 한강 노을", "Han River sunset from the Marina Park Cafe terrace")}" fetchpriority="high">
+    <div class="hero-box">
+      <p class="eyebrow">BANPO · HAN RIVER · SEORAENARU</p>
+      <h1>MARINA PARK<br><em>Cafe</em></h1>
+      <p class="hero-ko">{T("한강이 눈앞에 펼쳐지는 반포한강공원 서래나루의 카페 &amp; 레스토랑", "A cafe &amp; restaurant at Seoraenaru, Banpo Han River Park — the river right in front of you")}</p>
+      <p class="hero-meta"><span class="pill">{T(HOURS, HOURS_EN)}</span><span class="pill">Brunch until {BRUNCH_UNTIL}</span><span class="pill">River Terrace</span></p>
+      <p class="hero-cta"><a class="btn" href="{T("menu.html","menu-en.html")}">Menu</a><a class="btn btn-ghost" href="{RSV}">{T("예약하기","Reserve")}</a><a class="btn btn-ghost" href="#visit">{T("오시는 길","Directions")}</a></p>
     </div>
-    <div class="col-media">
-      {fig("cafe-01.jpg", "마리나파크 카페 야외 테라스와 반포 한강공원 전경", "tall")}
-      {fig("cafe-20.jpg", "마리나파크 카페 입구 저녁 풍경", "")}
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="section section-dark" id="terrace">
-  <div class="wrap">
-    <p class="eyebrow center">THE TERRACE</p>
-    <h2 class="center">Sunset on the Han <em>from your table</em></h2>
-    <div class="gallery">
-      {fig("cafe-14.jpg", "마리나파크 카페 테라스 — 한강 위 노을")}
-      {fig("cafe-02.jpg", "마리나파크 카페 테라스 저녁, 세빛섬 야경")}
-      {fig("cafe-09.jpg", "마리나파크 카페 실내에서 본 야간 테라스")}
-      {fig("cafe-08.jpg", "마리나파크에서 바라본 한강 노을과 세빛섬")}
-      {fig("cafe-11.jpg", "마리나파크 카페 테라스 라운지 소파석")}
-      {fig("cafe-03.jpg", "마리나파크 카페 가든 테이블 세팅과 한강")}
+  <section class="section" id="about">
+    <div class="wrap two-col">
+      <div class="col-text">
+        <p class="eyebrow">ABOUT</p>
+        <h2>River, light, <em>and a slow cup</em></h2>
+        <p>{T("마리나파크 카페는 반포한강공원 서래나루, 한강 위에 떠 있는 듯한 마리나파크 1층에 있습니다. 통창 너머로 한강과 서울의 스카이라인이 이어지고, 레드 어닝 아래 야외 테라스에서는 노을과 야경을 가장 가까이에서 만날 수 있습니다.", "Marina Park Cafe sits on the ground floor of Marina Park at Seoraenaru, Banpo Han River Park — a building that seems to float on the river. Floor-to-ceiling windows open onto the Han River and the Seoul skyline, and the terrace under the red awning puts you right in front of the sunset and the city lights.")}</p>
+        <p>{T("커피와 티, 디저트부터 피자·파스타·스테이크 같은 식사 메뉴, 저녁의 와인과 맥주, 하이볼까지 — 한강 산책 후 가볍게 들르는 시간도, 특별한 날의 긴 식사도 어울리는 공간입니다.", "Coffee, tea and desserts; pizza, pasta and steak; wine, beer and highballs in the evening — a place for a quick stop after a riverside walk, or a long dinner on a special day.")}</p>
+        <ul class="facts">
+          <li><b>{T("영업시간","Hours")}</b>{T(HOURS, HOURS_EN)}</li>
+          <li><b>{T("브런치","Brunch")}</b>{T(f"오후 {BRUNCH_UNTIL}까지", f"until {BRUNCH_UNTIL}")}</li>
+          <li><b>{T("위치","Location")}</b>{T(ADDRESS_SHORT, ADDRESS_SHORT_EN)} · {T("마리나파크 1층","Marina Park 1F")}</li>
+          <li><b>{T("문의","Contact")}</b><a href="tel:{TEL_RAW}">{TEL}</a></li>
+        </ul>
+        <p class="en-summary" lang="en" {"hidden" if lang == "en" else ""}>Marina Park Cafe is a riverside cafe &amp; restaurant on the ground floor of Marina Park at Seoraenaru, Banpo Han River Park, Seoul. Floor-to-ceiling river views, a red-awning terrace, coffee and desserts, Italian plates, brunch until {BRUNCH_UNTIL}, wine, beer and highballs. Open daily 10:00–22:00.</p>
+      </div>
+      <div class="col-media">
+        {fig("cafe-01.jpg", T("마리나파크 카페 야외 테라스와 반포 한강공원 전경", "Marina Park Cafe terrace and Banpo Han River Park"), "tall")}
+        {fig("cafe-20.jpg", T("마리나파크 카페 입구 저녁 풍경", "Marina Park Cafe entrance in the evening"), "")}
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section" id="dishes">
-  <div class="wrap">
-    <p class="eyebrow center">SIGNATURE DISHES</p>
-    <h2 class="center">Italian plates <em>&amp; comfort food</em></h2>
-    <p class="center sub">피자 · 파스타 · 돈까스 · 함박스테이크 · 찹스테이크 · 볶음밥 · 샐러드 · 떡볶이 · 먹태</p>
-    <div class="dish-grid">{dish_cards}</div>
-    <p class="center"><a class="btn btn-dark" href="menu.html">전체 메뉴 보기</a></p>
-  </div>
-</section>
-
-<section class="section section-cream" id="party">
-  <div class="wrap two-col rev">
-    <div class="col-media">
-      {fig("bldg-03.jpg", "마리나파크 가든 야간 파티 — 조명과 한강 야경", "tall")}
+  <section class="section section-dark" id="terrace">
+    <div class="wrap">
+      <p class="eyebrow center">THE TERRACE</p>
+      <h2 class="center">Sunset on the Han <em>from your table</em></h2>
+      <div class="gallery">
+        {fig("cafe-14.jpg", T("마리나파크 카페 테라스 — 한강 위 노을", "Terrace — sunset over the Han River"))}
+        {fig("cafe-02.jpg", T("마리나파크 카페 테라스 저녁, 세빛섬 야경", "Terrace at dusk with Some Sevit lights"))}
+        {fig("cafe-09.jpg", T("마리나파크 카페 실내에서 본 야간 테라스", "Night terrace seen from inside"))}
+        {fig("cafe-08.jpg", T("마리나파크에서 바라본 한강 노을과 세빛섬", "Han River sunset and Some Sevit from Marina Park"))}
+        {fig("cafe-11.jpg", T("마리나파크 카페 테라스 라운지 소파석", "Terrace lounge sofas"))}
+        {fig("cafe-03.jpg", T("마리나파크 카페 가든 테이블 세팅과 한강", "Garden table setting by the river"))}
+      </div>
     </div>
-    <div class="col-text">
-      <p class="eyebrow">PRIVATE PARTY</p>
-      <h2>Small gatherings <em>by the river</em></h2>
-      <p>카페 가든과 테라스에서 10~30명 규모의 생일 모임, 동호회, 브라이덜 샤워, 소규모 송년 모임을 예약하실 수 있습니다. 케이크 반입과 간단한 데코가 가능하고, 한강 노을이 자연스러운 배경이 됩니다.</p>
-      <p>50명 이상의 연회, 기업행사, 예식은 같은 건물 2층 컨벤션홀(100~300명)과 3층 루프탑 가든에서 진행합니다 — <a href="{MAIN_SITE}" target="_blank" rel="noopener">마리나파크 연회·웨딩 안내</a>.</p>
-      <p class="hero-cta"><a class="btn btn-dark" href="{RESERVE}">예약하기 (이메일)</a><a class="btn btn-ghost-dark" href="tel:{TEL_RAW}">전화 {TEL}</a></p>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="section" id="building">
-  <div class="wrap">
-    <p class="eyebrow center">MARINA PARK</p>
-    <h2 class="center">A house on the river, <em>three floors of occasions</em></h2>
-    <div class="gallery">
-      {fig("bldg-02.jpg", "마리나파크 건물 외관 — 1층 카페의 레드 어닝", "wide")}
-      {fig("bldg-04.jpg", "마리나파크 가든 야간 행사와 한강 다리 야경")}
-      {fig("cafe-19.jpg", "마리나파크 야경 — 한강 위의 건물 전경")}
-      {fig("bldg-05.jpg", "마리나파크 3층 루프탑 가든 잔디와 한강 전경")}
-      {fig("bldg-01.jpg", "마리나파크 1층 마리나 카페 외관")}
+  <section class="section" id="dishes">
+    <div class="wrap">
+      <p class="eyebrow center">SIGNATURE DISHES</p>
+      <h2 class="center">Italian plates <em>&amp; comfort food</em></h2>
+      <p class="center sub">{T("피자 · 파스타 · 돈까스 · 함박스테이크 · 찹스테이크 · 볶음밥 · 샐러드 · 떡볶이 · 먹태", "Pizza · Pasta · Pork Cutlet · Hamburg Steak · Chop Steak · Fried Rice · Salads · Tteokbokki · Grilled Pollack")}</p>
+      <div class="dish-grid">{dish_cards}</div>
+      <p class="center"><a class="btn btn-dark" href="{T("menu.html","menu-en.html")}">{T("전체 메뉴 보기","See the full menu")}</a></p>
     </div>
-    <p class="center sub">1F 마리나파크 카페 · 2F 컨벤션홀 (100~300명) · 3F 루프탑 가든</p>
-  </div>
-</section>
+  </section>
 
-<section class="section section-cream" id="visit">
-  <div class="wrap two-col">
-    <div class="col-text">
-      <p class="eyebrow">VISIT</p>
-      <h2>Find us <em>at Seoraenaru</em></h2>
-      <ul class="facts">
-        <li><b>주소</b>{ADDRESS}</li>
-        <li><b>영업시간</b>{HOURS}</li>
-        <li><b>전화</b><a href="tel:{TEL_RAW}">{TEL}</a></li>
-        <li><b>주차</b>반포한강공원 주차장 이용</li>
-        <li><b>대중교통</b>고속터미널역 · 신반포역에서 반포한강공원 서래나루 방향</li>
-        <li><b>Instagram</b><a href="{INSTA}" target="_blank" rel="noopener">{INSTA_HANDLE}</a></li>
-      </ul>
-      <p class="hero-cta"><a class="btn btn-dark" href="{MAP_NAVER}" target="_blank" rel="noopener">네이버 지도</a><a class="btn btn-ghost-dark" href="{MAP_GOOGLE}" target="_blank" rel="noopener">Google Maps</a></p>
+  <section class="section section-cream" id="party">
+    <div class="wrap two-col rev">
+      <div class="col-media">
+        {fig("bldg-03.jpg", T("마리나파크 가든 야간 파티 — 조명과 한강 야경", "Evening party in the Marina Park garden"), "tall")}
+      </div>
+      <div class="col-text">
+        <p class="eyebrow">PRIVATE PARTY</p>
+        <h2>Small gatherings <em>by the river</em></h2>
+        <p>{T("카페 가든과 테라스에서 10~30명 규모의 생일 모임, 동호회, 브라이덜 샤워, 소규모 송년 모임을 예약하실 수 있습니다. 케이크 반입과 간단한 데코가 가능하고, 한강 노을이 자연스러운 배경이 됩니다.", "The cafe garden and terrace can be booked for groups of 10–30: birthdays, club gatherings, bridal showers and small year-end parties. Bring a cake and simple decorations — the river sunset does the rest.")}</p>
+        <p>{T("50명 이상의 연회, 기업행사, 예식은 같은 건물 2층 컨벤션홀(100~300명)과 3층 루프탑 가든에서 진행합니다 — ", "Banquets of 50 or more, corporate events and weddings are held in the 2F convention hall (100–300 guests) and the 3F rooftop garden of the same building — ")}<a href="{MAIN_SITE}" target="_blank" rel="noopener">{T("마리나파크 연회·웨딩 안내", "Marina Park banquet &amp; wedding")}</a>.</p>
+        <p class="hero-cta"><a class="btn btn-dark" href="{RSV}">{T("예약하기 (이메일)", "Reserve by email")}</a><a class="btn btn-ghost-dark" href="tel:{TEL_RAW}">{T("전화", "Call")} {TEL}</a></p>
+      </div>
     </div>
-    <div class="col-media">
-      {fig("cafe-12.jpg", "마리나파크 카페 입구 — 레드 어닝과 Cafe 사인", "tall")}
+  </section>
+
+  <section class="section" id="building">
+    <div class="wrap">
+      <p class="eyebrow center">MARINA PARK</p>
+      <h2 class="center">A house on the river, <em>three floors of occasions</em></h2>
+      <div class="gallery">
+        {fig("bldg-02.jpg", T("마리나파크 건물 외관 — 1층 카페의 레드 어닝", "Marina Park — the cafe's red awning on the ground floor"), "wide")}
+        {fig("bldg-04.jpg", T("마리나파크 가든 야간 행사와 한강 다리 야경", "Garden event at night with the bridge lights"))}
+        {fig("cafe-19.jpg", T("마리나파크 야경 — 한강 위의 건물 전경", "Marina Park at night on the river"))}
+        {fig("bldg-05.jpg", T("마리나파크 3층 루프탑 가든 잔디와 한강 전경", "3F rooftop garden lawn and the river"))}
+        {fig("bldg-01.jpg", T("마리나파크 1층 마리나 카페 외관", "Marina Cafe exterior, ground floor"))}
+      </div>
+      <p class="center sub">{T("1F 마리나파크 카페 · 2F 컨벤션홀 (100~300명) · 3F 루프탑 가든", "1F Marina Park Cafe · 2F Convention Hall (100–300 guests) · 3F Rooftop Garden")}</p>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section" id="faq">
-  <div class="wrap narrow">
-    <p class="eyebrow center">FAQ</p>
-    <h2 class="center">자주 묻는 질문</h2>
-    <div class="faq">{faq_html}</div>
-  </div>
-</section>
-"""
-
-# ----------------------------------------------------------------------
-# MENU PAGE
-# ----------------------------------------------------------------------
-menu_cards = "\n".join(menu_section(c) for c in MENU)
-menu_nav = "".join(f'<a href="#m-{c[1].lower().replace(" ", "-").replace("&", "and")}">{c[1].title()}</a>' for c in MENU)
-menu_body = f"""
-<section class="page-hero">
-  <img class="hero-bg" src="images/cafe-27.jpg" alt="마리나파크 카페 까르보나라">
-  <div class="hero-box small">
-    <p class="eyebrow">MENU</p>
-    <h1>Marina Park <em>Cafe</em></h1>
-    <p class="hero-ko">{HOURS} · 브런치 세트 {BRUNCH_UNTIL}까지 · 가격 단위 천 원 (예: 5.5 = 5,500원)</p>
-  </div>
-</section>
-<nav class="menu-jump"><div class="wrap">{menu_nav}</div></nav>
-<section class="section">
-  <div class="wrap">
-    <div class="menu-grid">
-{menu_cards}
+  <section class="section section-cream" id="visit">
+    <div class="wrap two-col">
+      <div class="col-text">
+        <p class="eyebrow">VISIT</p>
+        <h2>Find us <em>at Seoraenaru</em></h2>
+        <ul class="facts">
+          <li><b>{T("주소","Address")}</b>{T(ADDRESS, ADDRESS_EN)}</li>
+          <li><b>{T("영업시간","Hours")}</b>{T(HOURS, HOURS_EN)}</li>
+          <li><b>{T("전화","Phone")}</b><a href="tel:{TEL_RAW}">{TEL}</a></li>
+          <li><b>{T("주차","Parking")}</b>{T("반포한강공원 주차장 이용", "Banpo Han River Park parking lot")}</li>
+          <li><b>{T("대중교통","Transit")}</b>{T("고속터미널역 · 신반포역에서 반포한강공원 서래나루 방향", "From Express Bus Terminal or Sinbanpo station, walk toward Seoraenaru in Banpo Han River Park")}</li>
+          <li><b>Instagram</b><a href="{INSTA}" target="_blank" rel="noopener">{INSTA_HANDLE}</a></li>
+        </ul>
+        <p class="hero-cta"><a class="btn btn-dark" href="{MAP_NAVER}" target="_blank" rel="noopener">{T("네이버 지도","Naver Map")}</a><a class="btn btn-ghost-dark" href="{MAP_GOOGLE}" target="_blank" rel="noopener">Google Maps</a></p>
+      </div>
+      <div class="col-media">
+        {fig("cafe-12.jpg", T("마리나파크 카페 입구 — 레드 어닝과 Cafe 사인", "Cafe entrance — red awning and Cafe sign"), "tall")}
+      </div>
     </div>
-    <p class="center note">메뉴와 가격은 사정에 따라 변경될 수 있습니다. 단체 예약·카페 파티 문의 <a href="tel:{TEL_RAW}">{TEL}</a> · <a href="{RESERVE}">{EMAIL}</a></p>
-  </div>
-</section>
-"""
+  </section>
 
+  <section class="section" id="faq">
+    <div class="wrap narrow">
+      <p class="eyebrow center">FAQ</p>
+      <h2 class="center">{T("자주 묻는 질문", "Frequently asked questions")}</h2>
+      <div class="faq">{faq_html}</div>
+    </div>
+  </section>
+  """
+
+  # ----------------------------------------------------------------------
+  # MENU PAGE
+  # ----------------------------------------------------------------------
+  menu_cards = "\n".join(menu_section(c, lang) for c in MENU)
+  menu_nav = "".join(f'<a href="#m-{c[1].lower().replace(" ", "-").replace("&", "and")}">{c[1].title()}</a>' for c in MENU)
+  menu_body = f"""
+  <section class="page-hero">
+    <img class="hero-bg" src="images/cafe-27.jpg" alt="{T("마리나파크 카페 까르보나라", "Carbonara at Marina Park Cafe")}">
+    <div class="hero-box small">
+      <p class="eyebrow">MENU</p>
+      <h1>Marina Park <em>Cafe</em></h1>
+      <p class="hero-ko">{T(f"{HOURS} · 브런치 세트 {BRUNCH_UNTIL}까지 · 가격 단위 천 원 (예: 5.5 = 5,500원)", f"{HOURS_EN} · Brunch set until {BRUNCH_UNTIL} · Prices in thousand KRW (e.g. 5.5 = ₩5,500)")}</p>
+    </div>
+  </section>
+  <nav class="menu-jump"><div class="wrap">{menu_nav}</div></nav>
+  <section class="section">
+    <div class="wrap">
+      <div class="menu-grid">
+  {menu_cards}
+      </div>
+      <p class="center note">{T("메뉴와 가격은 사정에 따라 변경될 수 있습니다. 단체 예약·카페 파티 문의", "Menu and prices are subject to change. Group reservations &amp; cafe parties:")} <a href="tel:{TEL_RAW}">{TEL}</a> · <a href="{RSV}">{EMAIL}</a></p>
+    </div>
+  </section>
+  """
+  return index_body, menu_body, faq_items
+
+ko_index, ko_menu, ko_faq = build("ko")
+en_index, en_menu, en_faq = build("en")
 # ----------------------------------------------------------------------
 pages = {
   "index.html": dict(title="마리나파크 카페 — 반포 한강공원 서래나루 한강뷰 카페 & 레스토랑 | Marina Park Cafe",
     desc=f"반포한강공원 서래나루 마리나파크 1층 한강뷰 카페. 커피·디저트·브런치·피자·파스타·스테이크·와인. {HOURS}. 레드 어닝 테라스, 10~30명 소규모 파티 예약. 02-537-2440",
-    body=index_body, extra_ld=jsonld_faq(faq_items),
+    body=ko_index, extra_ld=jsonld_faq(ko_faq),
     kw="반포 한강 카페, 서래나루 카페, 한강뷰 카페, 반포한강공원 카페, 마리나파크 카페, 한강 테라스 카페, 반포 브런치, 한강 레스토랑"),
   "menu.html": dict(title="메뉴 — 마리나파크 카페 | 커피·브런치·피자·파스타·와인 | Marina Park Cafe Menu",
     desc=f"마리나파크 카페 전체 메뉴와 가격. 커피·티·음료·베이커리·브런치 세트·피자·파스타·돈까스·스테이크·와인·맥주·하이볼. {HOURS}.",
-    body=menu_body, og="images/cafe-27.jpg",
+    body=ko_menu, og="images/cafe-27.jpg",
     kw="마리나파크 카페 메뉴, 반포 한강 카페 메뉴, 서래나루 브런치, 한강 피자 파스타, 반포 와인바"),
+  "en.html": dict(title="Marina Park Cafe — Han River view cafe & restaurant at Banpo, Seoul",
+    desc=f"Riverside cafe & restaurant on the ground floor of Marina Park, Seoraenaru, Banpo Han River Park, Seoul. Coffee, desserts, brunch, pizza, pasta, steak, wine. {HOURS_EN}. Red-awning terrace, private parties for 10–30. +82-2-537-2440",
+    body=en_index, extra_ld=jsonld_faq(en_faq), lang="en",
+    kw="Han River cafe, Banpo cafe Seoul, river view cafe Seoul, Seoraenaru cafe, Marina Park Cafe, Han River terrace restaurant, brunch Banpo"),
+  "menu-en.html": dict(title="Menu — Marina Park Cafe | Coffee, Brunch, Pizza, Pasta, Wine",
+    desc=f"Full menu and prices of Marina Park Cafe: coffee, tea, drinks, bakery, brunch set, pizza, pasta, pork cutlet, steak, wine, beer, highballs. {HOURS_EN}.",
+    body=en_menu, og="images/cafe-27.jpg", lang="en",
+    kw="Marina Park Cafe menu, Han River cafe menu, Banpo brunch, Seoul river pizza pasta, Banpo wine bar"),
 }
 for fname, kw in pages.items():
     with open(os.path.join(ROOT, fname), "w", encoding="utf-8") as f:

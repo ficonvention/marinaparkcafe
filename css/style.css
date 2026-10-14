@@ -162,3 +162,6 @@ p{margin:0 0 1.1em}
   .facts li{grid-template-columns:86px 1fr}
   .gallery{grid-template-columns:1fr 1fr}
 }
+/* language toggle */
+.site-nav .nav-lang{border:1px solid rgba(255,255,255,.45);color:#fff;padding:6px 12px;border-radius:999px;font-size:.72rem;letter-spacing:.08em;margin-left:.4rem}
+.site-nav .nav-lang:hover{border-color:#fff}
