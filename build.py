@@ -122,6 +122,19 @@ MENU = [
 ]
 
 # Food photos (file, 한글, 영문)
+# 인스타그램 @marinapark.cafe 최근 게시 세트 (그리드 순서: 1세트 → 2세트)
+INSTA_SETS = [
+    ("Day Set", "낮의 마리나파크", [
+        ("insta-1-01.jpg", "Coffee & brunch on the Han River"), ("insta-1-02.jpg", "Honey Toast & Espresso"),
+        ("insta-1-03.jpg", "Citrus Ade"), ("insta-1-04.jpg", "Cream Pasta"), ("insta-1-05.jpg", "Red awning cafe front"),
+        ("insta-1-06.jpg", "Fried Shrimp"), ("insta-1-07.jpg", "Arugula pizza, pasta & draft beer"), ("insta-1-08.jpg", "Cheese Cutlet"),
+        ("insta-1-09.jpg", "Namsan view terrace")]),
+    ("Evening Set", "저녁의 마리나파크", [
+        ("insta-2-01.jpg", "Sparkling wine on the night terrace"), ("insta-2-02.jpg", "Pork Cutlet"), ("insta-2-03.jpg", "Chop Steak"),
+        ("insta-2-04.jpg", "Draft beer & brunch plates"), ("insta-2-05.jpg", "Golden hour, golden plates"), ("insta-2-06.jpg", "Tteokbokki"),
+        ("insta-2-07.jpg", "Marina Park at night"), ("insta-2-08.jpg", "Chicken Tenders"), ("insta-2-09.jpg", "Dog-friendly terrace")]),
+]
+
 DISHES = [
   ("cafe-27.jpg", "까르보나라", "Carbonara"),
   ("cafe-28.jpg", "쉬림프 오일 파스타", "Shrimp Oil Pasta"),
@@ -294,6 +307,12 @@ def build(lang):
   ]
   faq_html = "".join(f'<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in faq_items)
 
+  insta_html = "".join(
+      f'<div class="insta-set"><p class="insta-set-title"><b>{en_t}</b><span>{T(ko_t, "")}</span></p><div class="insta-grid">'
+      + "".join(f'<a href="images/{f}" data-lightbox><img src="images/{f}" alt="{esc(cap)} — @marinapark.cafe" loading="lazy" width="900" height="1125"></a>' for f, cap in tiles)
+      + '</div></div>'
+      for en_t, ko_t, tiles in INSTA_SETS)
+
   dish_cards = "".join(
       f'<figure class="dish"><a href="images/{f}" data-lightbox><img src="images/{f}" alt="{esc(ko)} — {esc(en)}, {T("마리나파크 카페", NAME_EN)}" loading="lazy"></a><figcaption><b>{T(ko, esc(en))}</b><span>{T(esc(en), ko)}</span></figcaption></figure>'
       for f, ko, en in DISHES)
@@ -355,6 +374,16 @@ def build(lang):
       <p class="center sub">{T("피자 · 파스타 · 돈까스 · 함박스테이크 · 찹스테이크 · 볶음밥 · 샐러드 · 떡볶이 · 먹태", "Pizza · Pasta · Pork Cutlet · Hamburg Steak · Chop Steak · Fried Rice · Salads · Tteokbokki · Grilled Pollack")}</p>
       <div class="dish-grid">{dish_cards}</div>
       <p class="center"><a class="btn btn-dark" href="{T("menu.html","menu-en.html")}">{T("전체 메뉴 보기","See the full menu")}</a></p>
+    </div>
+  </section>
+
+  <section class="section section-cream" id="instagram">
+    <div class="wrap">
+      <p class="eyebrow center">ON INSTAGRAM</p>
+      <h2 class="center">@marinapark.cafe <em>this week</em></h2>
+      <p class="center sub">{T("인스타그램에 새로 올린 사진들 — 한강 위 카페의 낮과 저녁", "Fresh from our Instagram — the cafe by day and by night")}</p>
+      {insta_html}
+      <p class="center"><a class="btn btn-dark" href="https://www.instagram.com/marinapark.cafe" target="_blank" rel="noopener">{T("인스타그램에서 더 보기", "See more on Instagram")}</a></p>
     </div>
   </section>
 

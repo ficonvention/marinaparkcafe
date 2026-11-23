@@ -168,3 +168,13 @@ p{margin:0 0 1.1em}
 .foot-insta{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.6rem}
 .foot-insta>span{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;opacity:.6}
 .foot-insta a b{font-weight:600;margin-right:.3rem}
+
+/* instagram sets */
+.insta-set{margin-top:2.6rem}
+.insta-set-title{display:flex;align-items:baseline;justify-content:center;gap:.7rem;margin:0 0 1rem;letter-spacing:.18em;text-transform:uppercase;font-size:.8rem}
+.insta-set-title span{letter-spacing:.05em;text-transform:none;opacity:.6}
+.insta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:780px;margin:0 auto}
+.insta-grid a{display:block;overflow:hidden;background:#000}
+.insta-grid img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;transition:transform .8s,opacity .4s}
+.insta-grid a:hover img{transform:scale(1.04);opacity:.92}
+@media (max-width:600px){.insta-grid{gap:3px}}
