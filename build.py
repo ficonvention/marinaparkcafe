@@ -133,6 +133,11 @@ INSTA_SETS = [
         ("insta-2-01.jpg", "Sparkling wine on the night terrace"), ("insta-2-02.jpg", "Pork Cutlet"), ("insta-2-03.jpg", "Chop Steak"),
         ("insta-2-04.jpg", "Draft beer & brunch plates"), ("insta-2-05.jpg", "Golden hour, golden plates"), ("insta-2-06.jpg", "Tteokbokki"),
         ("insta-2-07.jpg", "Marina Park at night"), ("insta-2-08.jpg", "Chicken Tenders"), ("insta-2-09.jpg", "Dog-friendly terrace")]),
+    ("Signature Plates", "시그니처 플레이트", [
+        ("insta-3-01.jpg", "Pork Cutlet"), ("insta-3-02.jpg", "Chicken Salad"), ("insta-3-03.jpg", "Shrimp Oil Pasta"),
+        ("insta-3-04.jpg", "Salmon Salad"), ("insta-3-05.jpg", "Carbonara"), ("insta-3-06.jpg", "Burrata Salad"),
+        ("insta-3-07.jpg", "Grilled Dried Pollack"), ("insta-3-08.jpg", "Chop Steak"), ("insta-3-09.jpg", "Shrimp & Chips"),
+        ("insta-3-10.jpg", "Hamburg Steak"), ("insta-3-11.jpg", "Fried Rice"), ("insta-3-12.jpg", "Tteokbokki")]),
 ]
 
 DISHES = [
