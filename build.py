@@ -144,7 +144,7 @@ DISHES = [
   ("cafe-27.jpg", "까르보나라", "Carbonara"),
   ("cafe-28.jpg", "쉬림프 오일 파스타", "Shrimp Oil Pasta"),
   ("cafe-25.jpg", "찹스테이크", "Chop Steak"),
-  ("cafe-35.jpg", "함박스테이크", "Hamburg Steak"),
+  ("cafe-35-r.jpg", "함박스테이크", "Hamburg Steak"),
   ("cafe-29.jpg", "돈까스", "Pork Cutlet"),
   ("cafe-34.jpg", "볶음밥 (김치 / 새우)", "Fried Rice"),
   ("cafe-26.jpg", "쉬림프 & 칩스", "Shrimp & Chips"),
